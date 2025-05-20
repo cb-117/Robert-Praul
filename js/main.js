@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add placeholder profile image if none exists
     checkProfileImage();
+    
+    // Set up theme switcher
+    setupThemeSwitcher();
 });
 
 function appendSecurityHeaders() {
@@ -80,6 +83,66 @@ function checkProfileImage() {
         this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"%3E%3Ccircle cx="75" cy="75" r="75" fill="%232c3e50"/%3E%3Ccircle cx="75" cy="60" r="25" fill="%23ecf0f1"/%3E%3Cpath d="M75 95 C50 95 35 120 35 150 L115 150 C115 120 100 95 75 95 Z" fill="%23ecf0f1"/%3E%3C/svg%3E';
         console.warn('Profile image not found. Using placeholder.');
     });
+}
+
+function setupThemeSwitcher() {
+    // Create theme switch HTML
+    const themeSwitchWrapper = document.createElement('div');
+    themeSwitchWrapper.className = 'theme-switch-wrapper';
+    
+    const themeIcon1 = document.createElement('span');
+    themeIcon1.className = 'theme-icon';
+    themeIcon1.innerHTML = '<i class="fas fa-sun"></i>';
+    
+    const themeSwitch = document.createElement('label');
+    themeSwitch.className = 'theme-switch';
+    
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = 'theme-switch-checkbox';
+    
+    const slider = document.createElement('span');
+    slider.className = 'slider';
+    
+    const themeIcon2 = document.createElement('span');
+    themeIcon2.className = 'theme-icon';
+    themeIcon2.innerHTML = '<i class="fas fa-moon"></i>';
+    
+    themeSwitch.appendChild(checkbox);
+    themeSwitch.appendChild(slider);
+    
+    themeSwitchWrapper.appendChild(themeIcon1);
+    themeSwitchWrapper.appendChild(themeSwitch);
+    themeSwitchWrapper.appendChild(themeIcon2);
+    
+    document.body.appendChild(themeSwitchWrapper);
+    
+    // Check for saved user preference
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Set initial theme
+    if (currentTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        checkbox.checked = true;
+    }
+    
+    // Add event listener
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            document.body.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+    
+    // Add animation to theme switch
+    themeSwitchWrapper.style.opacity = '0';
+    setTimeout(() => {
+        themeSwitchWrapper.style.transition = 'opacity 0.5s ease';
+        themeSwitchWrapper.style.opacity = '1';
+    }, 1000);
 }
 
 // Add active class to navigation based on current section
